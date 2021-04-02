@@ -1,16 +1,26 @@
 #include <DS3231.h>//Memanggil RTC3231 Library
 #include <Wire.h>  // i2C Conection Library
-#include <LiquidCrystal.h> //Libraries
+//#include <LiquidCrystal.h> //Libraries
 #include <EEPROM.h>
+#include<CheapStepper.h>
+#include <SoftwareSerial.h>
+#include <LiquidCrystal_I2C.h>
 
-LiquidCrystal lcd(2, 3, 4, 5, 6, 7); //Arduino pins to lcd
+LiquidCrystal_I2C lcd(0x3F,16,2);  // set the LCD address to 0x3F for a 16 chars and 2 line display
+
+//Create software serial object to communicate with SIM800L
+SoftwareSerial mySerial(4, 5); //SIM800L Tx & Rx is connected to Arduino #4 & #5
+
+CheapStepper tabletangle (0,1,3,2);
+
+//LiquidCrystal lcd(A5,A4); //Arduino pins to lcd
 
 // control buttons
-#define bt_menu   A0
-#define bt_up     A1
-#define bt_down   A2
-#define bt_select  A3
-#define bt_door 1
+#define bt_menu   6
+#define bt_up     7
+#define bt_down   9
+#define bt_select  8
+#define bt_door 13
 
 
 // Init DS3231
@@ -45,17 +55,21 @@ int medi_confirm[3]={0,0,0};
 
 void setup() {
 // Setup Serial connection
-  Serial.begin(9600);
+   Serial.begin(9600);
 
-  rtc.begin(); // memulai koneksi i2c dengan RTC
+   rtc.begin(); // memulai koneksi i2c dengan RTC
 
- pinMode(bt_menu,  INPUT_PULLUP);
- pinMode(bt_up,    INPUT_PULLUP);
- pinMode(bt_down,  INPUT_PULLUP);
- pinMode(bt_select, INPUT_PULLUP);
- pinMode(bt_door, INPUT_PULLUP);
-  
-  lcd.begin(16, 2); // Configura lcd numero columnas y filas
+   tabletangle.setRpm(12);// set stepper motor rotating angle
+
+   pinMode(bt_menu,  INPUT_PULLUP);
+   pinMode(bt_up,    INPUT_PULLUP);
+   pinMode(bt_down,  INPUT_PULLUP);
+   pinMode(bt_select, INPUT_PULLUP);
+   pinMode(bt_door, INPUT_PULLUP);
+  lcd.init();
+  lcd.clear();
+  lcd.backlight();
+  //lcd.begin(16, 2); // Configura lcd numero columnas y filas
   lcd.setCursor(0,0);  //Show "TIME" on the LCD
   lcd.print(" Audhatha-Memore ");
   lcd.setCursor (0,1);
