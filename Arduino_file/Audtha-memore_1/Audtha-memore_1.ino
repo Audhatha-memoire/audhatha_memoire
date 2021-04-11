@@ -53,6 +53,7 @@ int tele_num_id=0,tele_num[9]={0,0,0,0,0,0,0,0,0};
 int medi_confirm[3]={0,0,0};
 
 
+
 void setup() {
 // Setup Serial connection
    Serial.begin(9600);
@@ -508,5 +509,3 @@ void msg_sending(){
     
     }
   
-
-
