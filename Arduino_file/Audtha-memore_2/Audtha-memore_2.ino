@@ -11,7 +11,7 @@ LiquidCrystal lcd(2, 3, 4, 5, 6, 7); //Arduino pins to lcd
 #define bt_down   A2
 #define bt_select  A3
 
-//#define buzzer 8
+#define buzzer 8
 
 // Init DS3231
 DS3231  rtc(SDA, SCL);
@@ -109,6 +109,7 @@ void loop() {
       lcd.print((yy/10)%10);
       lcd.print(yy % 10);
       }
+ 
   select_menu();
   phone_number();
   medicine_take();
@@ -417,6 +418,7 @@ void alarming(){
               lcd.clear();
               medi_confirm[0]=-1;
               lcd.setCursor(0,0);
+              speaker();
               lcd.print("MORNING MEDICINE");
               lcd.setCursor(0,1);
               lcd.print("   TIME   ");
@@ -441,65 +443,74 @@ void msg_sending(){
               lcd.clear();
               break;
               }
-  
         }
   }
 
   void medicine_take(){
     if(digitalRead(bt_select)==0 && mode ==0 && digitalRead(bt_door)==1 ){
-      mode=2;
-      lcd.clear();
-      for(int i;i<3;i++){
-        if((remain_time[i][0]+3)>hh && (remain_time[i][0]-3)<hh){
-              if (medi_confirm[i]==1){
-                lcd.setCursor(0,0);
-                lcd.print("YOU ALREADY");
-                lcd.setCursor(0,0);
-                lcd.print(" TAKE MEDICINE ");
-                mode=0;
-                lcd.clear();}
-              }
-              else{
-                lcd.setCursor(0,0);
-                lcd.print("NOW YOU CAN TAKE");
-                lcd.setCursor(0,0);
-                lcd.print(time_slot[i]);
-                lcd.print(" MEDICINE ");
-                medi_time=i+1;
-                delay(1000);
-                lcd.clear();
-                lcd.setCursor(0,0);
-                lcd.print("PRESS ENTER");
-                delay(300);
+          mode=2;
+          lcd.clear();
+          for(int i;i<3;i++){
+                if((remain_time[i][0]+3)>hh && (remain_time[i][0]-3)<hh){
+                      if (medi_confirm[i]==1){
+                        lcd.setCursor(0,0);
+                        lcd.print("YOU ALREADY");
+                        lcd.setCursor(0,0);
+                        lcd.print(" TAKE MEDICINE ");
+                        mode=0;
+                        lcd.clear();}
+                      else{
+                        lcd.setCursor(0,0);
+                        lcd.print("NOW YOU CAN TAKE");
+                        lcd.setCursor(0,0);
+                        lcd.print(time_slot[i]);
+                        lcd.print(" MEDICINE ");
+                        medi_time=i+1;
+                        delay(1000);
+                        lcd.clear();
+                        lcd.setCursor(0,0);
+                        lcd.print("PRESS UP >>");
+                        delay(300);
+                        }
+                      break;
+                } 
+              else if(i==2){
+                        lcd.setCursor(0,0);
+                        lcd.print("YOU WAIT");
+                        lcd.setCursor(0,0);
+                        lcd.print(" EDITING ");
+                        mode=0;medi_time=0;
+                        lcd.clear();
                 }
-              break;
-      } 
-     }
-
-     if(medi_time>0){
-      int finish=0,box=0,last=0;
-      while(finish==0){
-        while(medicine[medi_time-1][box]==0 && box<9){
-         
-          box=box+1;}
-        if(digitalRead(bt_up)==0 && box>=0 && box<9){
-          //stepper(int box)
-          last=box;
-          box=box+1;}
-         else if(digitalRead(bt_down)==0 && box>1 ){
-           //stepper(int last);
-           box=box;
-           }
-        }
-      
-      }
-
-    
+              
+          }
     }
 
+     if(medi_time>0){
+          int finish=0,box=0,last=0;
+          while(finish==0){
+                while(medicine[medi_time-1][box]==0 && box<9){
+                  box=box+1;}
+                if(digitalRead(bt_up)==0 && box>=0 && box<9){
+                      stepper( box);
+                      last=box;
+                      box=box+1;}
+                 else if(digitalRead(bt_down)==0 && box>1 ){
+                       stepper( last);
+                       box=box;}
+                 else if(box==9){
+                      mode=0;
+                      finish=1;medi_time=0;}
+          } 
+       }
+    }
+  
+  
 void stepper(int box){
   }
 void speaker(){
+  tone(buzzer,500,2000);
+  delay(2000);
   }
 void sms_module(){
   }
