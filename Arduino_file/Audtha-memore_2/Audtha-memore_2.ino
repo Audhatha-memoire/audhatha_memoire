@@ -32,7 +32,7 @@ char menu[7][16] = {"SETUP-MENU","PILL IN/RESET","TIME/DATE","REMAINDER TIME","P
 
 //Medicine - tablet-count
 char time_slot[3][10]={"MORNING","LUNCH","NIGHT"};
-int medicine[3][8]={{0,3,0,0,0,0,7,0},{2,3,4,0,3,0,2,1},{0,1,2,3,4,5,6,7}};
+int medicine[3][8]={{0,3,1,2,3,4,7,0},{2,3,4,0,3,0,2,1},{0,1,2,3,4,5,6,7}};
 
 //remaider alarm variable
 int remain_slot=0,remain_time[3][2]={6,0,13,0,20,0},t_h_m=0;
@@ -64,13 +64,11 @@ void setup() {
       lcd.print(" Medi-Care-Box ");
       delay (2000);
       lcd.clear(); 
-
 }
 
 void loop() {
   t = rtc.getTime();
   Day = rtc.getDOWStr(1);
-
   if (setMode == 0){
       hh = t.hour,DEC;
       mm = t.min,DEC;
@@ -78,39 +76,38 @@ void loop() {
       dd = t.date,DEC;
       bb = t.mon,DEC;
       yy = t.year,DEC;
-      }  
-
+      } 
+  if(hh==0 && mm==0){
+    for(int i=0;i<3;i++){
+    medi_confirm[i]=0;}}
   if(mode==0){
       lcd.setCursor(0,0); 
-      lcd.print("   ");
-      lcd.print((hh/10)%10);
-      lcd.print(hh % 10); 
-      lcd.print(":");
-      lcd.print((mm/10)%10);
-      lcd.print(mm % 10);
-      lcd.print(":");
-      lcd.print((ss/10)%10);
-      lcd.print(ss % 10);
+      print_time(hh,mm,ss);
       lcd.setCursor(1,1);
-      lcd.print(" ");
-      lcd.print((dd/10)%10);
-      lcd.print(dd % 10); 
-      lcd.print("/");
-      lcd.print((bb/10)%10);
-      lcd.print(bb % 10);
-      lcd.print("/"); 
-      lcd.print((yy/1000)%10);
-      lcd.print((yy/100)%10);
-      lcd.print((yy/10)%10);
-      lcd.print(yy % 10);
+      print_date(dd,bb,yy);
       }
   select_menu();      
   medicine_take();
   alarming();
   msg_sending();
 }
+void print_time(int hh,int mm,int ss){
+      lcd.print("   ");
+      lcd.print((hh/10)%10);lcd.print(hh % 10); 
+      lcd.print(":");
+      lcd.print((mm/10)%10);lcd.print(mm % 10);
+      lcd.print(":");
+      lcd.print((ss/10)%10);lcd.print(ss % 10);
+  }
 
-
+void print_date(int dd,int bb, int yy){
+      lcd.print(" ");
+      lcd.print((dd/10)%10);lcd.print(dd % 10); 
+      lcd.print("/");
+      lcd.print((bb/10)%10);lcd.print(bb % 10);
+      lcd.print("/"); 
+      lcd.print((yy/1000)%10);lcd.print((yy/100)%10);lcd.print((yy/10)%10);lcd.print(yy % 10);
+      }
 void select_menu(){
   if (menu_mode==0 && digitalRead(bt_menu)==0 && mode==0){
       lcd.clear();
@@ -181,8 +178,6 @@ void pill_box(){
         else{
                   lcd.print("->");lcd.print("PILL BOX - ");lcd.print(pillbox-1);}
         lcd.setCursor(0,1);lcd.print("->");
-        //delay(50);
-        //lcd.setCursor(0,1);lcd.print("->");
         if (pillbox==9){lcd.print("EXIT");}
         else{
                   lcd.print("PILL BOX - ");lcd.print(pillbox);
@@ -192,7 +187,6 @@ void pill_box(){
         pill_box();
             }
   }
-
 
 void pill__inside(int box){
   //iterate time slot in pill box
@@ -246,44 +240,28 @@ void time_date(){
                     delay(500);}
               }
          else if (digitalRead(bt_up)==0){
-              if(setMode==1){hh=hh%24+1;}
-              if(setMode==2){mm=mm%60+1;}
-              if(setMode==3){dd=dd%30+1;}
-              if(setMode==4){bb=bb%12+1;}
+              if(setMode==1){hh=(hh+1)%24;}
+              if(setMode==2){mm=(mm+1)%60;}
+              if(setMode==3){dd=(dd+1)%31;}
+              if(setMode==4){bb=(bb+1)%12;}
               if(setMode==5){yy=yy+1;}
               delay(300);
             }
         else if (digitalRead(bt_down)==0){
-              if(setMode==1){hh=hh%24-1;}
-              if(setMode==2){mm=mm%60-1;}
-              if(setMode==3){dd=dd%30-1;}
-              if(setMode==4){bb=bb%12-1;}
+              if(setMode==1){hh=(hh-1)%24;if(hh<0){hh=24+hh;}}
+              if(setMode==2){mm=(mm-1)%60;if(mm<0){mm=60+mm;}}
+              if(setMode==3){dd=(dd-1)%31;if(dd<0){dd=31+dd;}}
+              if(setMode==4){bb=(bb-1)%12;if(bb<0){bb=12+bb;}}
               if(setMode==5){yy=yy-1;}
               delay(300);
               }
         if (setMode<3){
-              lcd.setCursor(0,0);
-              lcd.print("  TIME RESET  ");
-              lcd.setCursor(0,1);
-              lcd.print("   ");if(hh<10){lcd.print("0");}
-              lcd.print(hh); 
-              lcd.print(":");if(mm<10){lcd.print("0");}
-              lcd.print(mm);
-              lcd.print(":");
-              lcd.print("00");
-              lcd.print(" ");
-              }
+              lcd.setCursor(0,0);lcd.print("  TIME RESET  ");
+              lcd.setCursor(0,1);print_time(hh,mm,0);}
          else if (setMode>2 && setMode<6){
               lcd.setCursor(0,0);
               lcd.print("   DATE RESET    ");
-              lcd.setCursor(0,1);
-              lcd.print("  ");if(dd<10){lcd.print("0");}   
-              lcd.print(dd);
-              lcd.print("/");if(bb<10){lcd.print("0");}
-              lcd.print(bb);
-              lcd.print("/"); 
-              lcd.print(yy);
-              }
+              lcd.setCursor(0,1);print_date(dd,bb,yy);}
          time_date();
       }
   }
@@ -370,7 +348,6 @@ void phone_number(){
        phone_number();
         }
   }
-
 void alarming(){ 
   for(int i=0;i<3;i++){
         if(medi_confirm[i]==0 && hh==remain_time[i][0] && mm>=remain_time[i][1]){
@@ -384,7 +361,6 @@ void alarming(){
               break;}
         }
   }
-  
 void msg_sending(){
   for(int i=0;i<3;i++){
         if(medi_confirm[i]==-1 && (hh-1)==remain_time[i][0] && mm>=remain_time[i][1]){
@@ -409,14 +385,13 @@ void medicine_take(){
                       if (medi_confirm[i]==1){
                         lcd.setCursor(0,0);lcd.print("YOU ALREADY");
                         lcd.setCursor(0,1);lcd.print(" TAKE MEDICINE ");
-                        mode=0;
+                        mode=0;delay(3000);
                         lcd.clear();}
                       else{
                         lcd.setCursor(0,0);lcd.print("NOW YOU CAN TAKE");
                         lcd.setCursor(0,1);lcd.print(time_slot[i]);lcd.print(" MEDICINE ");
                         medi_time=i+1;
-                        delay(1000);
-                        }
+                        delay(1000);}
                       break;
                 } 
               else if(i==2){
@@ -435,32 +410,46 @@ void medicine_take(){
           int box=0,finish=0;
           while(finish==0){
                 if(digitalRead(bt_up)==0){
-                       while (box<8){
+                       while (box<8){                              
                               if(medicine[medi_time-1][box]>0){break;}
                               else{box=box+1;}}
                        if(box==8){
-                              mode=0;stepper(0);finish=1;medi_time=0;
-                              lcd.clear();}
+                              lcd.setCursor(0,0);lcd.print("  YOU TOOK ALL  ");
+                              lcd.setCursor(0,1);lcd.print("    MEDICINE    ");
+                              delay(3000);lcd.clear();
+                              mode=0;stepper(0);finish=1;
+                              medi_confirm[medi_time-1]=1;
+                              medi_time=0;}
                         else {
                               lcd.clear();
                               lcd.setCursor(0,0);lcd.print("Pill Box -");lcd.print(box+1);
                               lcd.setCursor(0,1);lcd.print(medicine[medi_time-1][box]);lcd.print(" - pills");
-                              stepper(box);box=box+1;}
+                             // stepper(box);
+                              box=box+1;
+                              delay(300);}
                         }
                  else if(digitalRead(bt_down)==0){
                       box=box-2;
-                      while(box>0){
+                      
+                      delay(300);
+
+                      while(box>=0){
                               if(medicine[medi_time-1][box]>0){
                                       lcd.clear();
                                       lcd.setCursor(0,0);lcd.print("Pill Box -");lcd.print(box+1);
                                       lcd.setCursor(0,1);lcd.print(medicine[medi_time-1][box]);lcd.print(" - pills");
-                                      stepper(box);box=box+1;
+                                      //stepper(box);
+                                      delay(300);
+                                      box=box+1;
                                       break;}
+                              else if(box==0){break;}
                               else{box=box-1;}}
                       }
              } 
         }
     }
+
+    
 int motor_posi=0;  
 void stepper(int box){
         CheapStepper tabletangle (8,9,10,11);
