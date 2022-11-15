@@ -1,5 +1,6 @@
 # Audhatha-Memore
 * Image
+![My Image](Images/full1.jpg)
 
 ## THE PROBLEM
 
