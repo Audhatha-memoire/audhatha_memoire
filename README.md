@@ -1,4 +1,4 @@
-# Audhatha-Memore
+# Audhatha-Memoire
 ![title](https://user-images.githubusercontent.com/81348862/201983364-fc32ee7c-3357-48eb-829e-6aaf8f1bb1fc.png)
 
 ## THE PROBLEM
@@ -42,7 +42,7 @@
 * LEDS INDICATE THAT THE MEDICATION WAS ALREADY USED AT THAT TIME TO PREVENT UNNECESSARY OVERDOSE.
 
 ## TESTING PROTOTYPE
-* Vedio Clip 
+* Video Clip 
 
 ## FUNCTIONALITY AND BLOCK DIAGRAM
 ![func](https://user-images.githubusercontent.com/81348862/201983760-b0893336-cca2-486d-9fc6-5cbf7b04b43b.png)
