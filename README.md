@@ -1,10 +1,14 @@
 # Audhatha-memore
+* Image
 
 ## THE PROBLEM
 
 * Now days usage of oral medication is very high due to our modern health problems. But due to these busy times, people forget to take medicine at the correct time. This is frequent in the elderly. This could lead to mild to fatal consequences.
 
-### THE SOLUTIONS PROVIDED BY THE MANUFACTURES ARE ONLY A MERE ALARM CLOCK THAT CAN HOLD MEDICINE.
+* THE SOLUTIONS PROVIDED BY THE MANUFACTURES ARE ONLY A MERE ALARM CLOCK THAT CAN HOLD MEDICINE.
+
+## OUR PRODUCT
+* Image
 
 ## MOTIVATION AND JUSTIFICATION
 
@@ -37,4 +41,16 @@
 * THE DEVICE WILL BE POWERED BY A 9V BATTERY AND COULD BE CONNECTED WITH RESIDENTIAL CURRENT WITH AC/DC 5V ADAPTER.
 * LEDS INDICATE THAT THE MEDICATION WAS ALREADY USED AT THAT TIME TO PREVENT UNNECESSARY OVERDOSE.
 
+## TESTING PROTOTYPE
+* Vedio Clip 
+
+## FUNCTIONALITY AND BLOCK DIAGRAM
+* Image
+
+
+## ENCLOSURE DESIGN
+* Image
+
+## PCB DESIGN
+* Image
 
