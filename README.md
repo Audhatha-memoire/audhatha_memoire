@@ -56,7 +56,10 @@
 ![subpcb](https://user-images.githubusercontent.com/81348862/201984097-3ddd5a02-3b7d-4590-925e-0ac78e6a2eaf.png)
 
 ## OUR PRODUCT
+### Final Design
 ![full1](https://user-images.githubusercontent.com/81348862/201983035-d80dc50f-347c-4d30-b60c-5036c429c020.png)
+### Final Implementation
+![sm](https://user-images.githubusercontent.com/81348862/201985847-60ef92cc-b855-4944-8e37-a1318d96484c.jpg)
 
 ## POSTER
 ![poster](https://user-images.githubusercontent.com/81348862/201983626-215baa3b-34cc-4d38-81d9-719c4ce2c8b5.png)
